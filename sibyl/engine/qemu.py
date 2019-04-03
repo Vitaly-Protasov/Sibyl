@@ -85,22 +85,16 @@ class UcWrapJitter(object):
         self.vm.set_mem(getattr(self.cpu, self.ira.sp.name), pck64(value))
 
     def run(self, pc, timeout_seconds=1):
-        #pdb.set_trace()
         try:
-                #Aims to emulate ARM and Thumb instructions together 
-            if self.ask_arch in ('arm','armt'):
-                # Note we start at ADDRESS | 1 to indicate THUMB mode.
-                if self.mu.emu_start(pc | 1, END_ADDR, timeout_seconds * unicorn.UC_SECOND_SCALE):
-                    pass
-                else:
-                    self.mu.emu_start(pc, END_ADDR, timeout_seconds * unicorn.UC_SECOND_SCALE)
+            if self.ask_arch == 'armt' and self.ask_attrib == 'l':
+                self.mu.emu_start(pc | 1, END_ADDR, timeout_seconds * unicorn.UC_SECOND_SCALE)
             else:
                 self.mu.emu_start(pc, END_ADDR, timeout_seconds * unicorn.UC_SECOND_SCALE)
         except unicorn.UcError as e:
             if getattr(self.cpu, self.ira.pc.name) != END_ADDR:
                 raise UnexpectedStopException()
         finally:
-            self.mu.emu_stop()
+self.mu.emu_stop()
 
     def verbose_mode(self):
         self.mu.hook_add(unicorn.UC_HOOK_MEM_READ_UNMAPPED, self.hook_mem_invalid)

@@ -94,7 +94,7 @@ class UcWrapJitter(object):
             if getattr(self.cpu, self.ira.pc.name) != END_ADDR:
                 raise UnexpectedStopException()
         finally:
-self.mu.emu_stop()
+			self.mu.emu_stop()
 
     def verbose_mode(self):
         self.mu.hook_add(unicorn.UC_HOOK_MEM_READ_UNMAPPED, self.hook_mem_invalid)
